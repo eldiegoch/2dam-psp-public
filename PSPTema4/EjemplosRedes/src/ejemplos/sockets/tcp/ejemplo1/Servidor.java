@@ -18,7 +18,7 @@ public class Servidor {
 			//Otra forma de hacer "bind" con el puerto
 //			InetSocketAddress addr = new InetSocketAddress("localhost", 5555);
 //			serverSocket.bind(addr);
-			System.out.println("SERVIDOR: Aceptando conexiones. El servidor se bloquea esperando conexiones entrantes");
+			System.out.println("SERVIDOR: Aceptando conexiones. El servidor se bloquea esperando conexiones entrantes \n");
 
 			Socket newSocket = serverSocket.accept();
 			System.out.println("SERVIDOR: Conexión recibida. El framework nos devuelve un nuevo socket para 'dialogar'. El puerto de este nuevo socket es: " + newSocket.getPort());
