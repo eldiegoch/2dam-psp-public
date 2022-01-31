@@ -22,9 +22,19 @@ public class Ftp {
 
 	// Tambien podemos conectar a ftp.rediris.es de forma anonima (sin especificar
 	// usuario y pass)
+	
+	//ftp:///
+//	public static final String IP = "ftp.dlptest.com";
+
 	public static final String IP = "test.rebex.net";
 	public static final int PUERTO = 21;
+	
+	//
+//	public static final String USUARIO = "dlpuser";
 	public static final String USUARIO = "demo";
+	
+	//
+//	public static final String CONTRASENA = "rNrKYTX9g7z3RgJRmxWuGHbeu";
 	public static final String CONTRASENA = "password";
 
 	public static void main(String args[]) {
@@ -50,16 +60,15 @@ public class Ftp {
 			}
 
 			log.info("Cambiamos de ruta a la /pub/example ");
-			
 			log.info("Directorio actual:  " + clienteFtp.printWorkingDirectory());
-			clienteFtp.changeWorkingDirectory("/pub/example");
-			log.info("Directorio actual:  " + clienteFtp.printWorkingDirectory());
+//			clienteFtp.changeWorkingDirectory("/pub/example");
+//			log.info("Directorio actual:  " + clienteFtp.printWorkingDirectory());
 
-			
 			log.info("Listando el listado de archivos . . ");
 			FTPFile[] ficheros = clienteFtp.listFiles();
 			for (int i = 0; i < ficheros.length; i++) {
-				log.info(" - " + ficheros[i].getName());
+				log.info(" - (" + ficheros[i].getType()  +")"+ ficheros[i].getName());
+				
 			}
 			
 			mostrarRespuestaFtp(clienteFtp);
