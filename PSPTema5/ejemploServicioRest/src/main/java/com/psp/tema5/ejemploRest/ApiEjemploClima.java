@@ -1,7 +1,7 @@
 package com.psp.tema5.ejemploRest;
 
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,9 @@ import com.psp.tema5.ejemploRest.model.Resultado;
 public class ApiEjemploClima {
 
 	private static final String template = "Hello, %s!";
-	private final AtomicLong counter = new AtomicLong();
+
+	//Se añade un mapa para "simular" una BD
+	private static ConcurrentHashMap<String, InfoClima> datosInfoClimaPorCiudad = new ConcurrentHashMap<>();
 
 	@GetMapping("/saludo")
 	public String saludo(@RequestParam(value = "name", defaultValue = "World") String name) {
@@ -27,20 +29,26 @@ public class ApiEjemploClima {
 	
 	@GetMapping("/infoClima")
 	public InfoClima peticionClima(@RequestParam(value = "ciudad", defaultValue = "Madrid") String ciudad) {
-		InfoClima clima = new InfoClima();
-		clima.setCiudad(ciudad);
-		//Calculamos temperatura y humedad aleatoria para comprobar que siempre da algo distinto
-		Random aleatorio = new Random();
-		clima.setTemperatura(aleatorio.nextInt(30));
-		clima.setHumedad(aleatorio.nextInt(15));
+		InfoClima clima = datosInfoClimaPorCiudad.get(ciudad);
 		return clima;
 	}
+	
+	@GetMapping("/todas-ciudades")
+	public Collection<InfoClima> peticionClima() {
+		return datosInfoClimaPorCiudad.values();
+	}
+	
+	
 	
 	@PostMapping("/nueva-ciudad")
 	public Resultado incluirInfoClima(@RequestBody InfoClima info) {
 		Resultado infoResultado = new Resultado();
 		infoResultado.setExito(true);
 		infoResultado.setMensaje("Todo ok, registro grabado en BD. La ciudad recibida es: " + info.getCiudad());
+		
+		datosInfoClimaPorCiudad.put(info.getCiudad(), info);
 		return infoResultado;
 	}
+	
+	
 }

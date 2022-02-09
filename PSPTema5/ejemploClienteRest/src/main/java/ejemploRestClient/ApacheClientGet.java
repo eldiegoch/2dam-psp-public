@@ -1,5 +1,6 @@
 package ejemploRestClient;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
@@ -9,6 +10,11 @@ import org.apache.cxf.jaxrs.client.WebClient;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
+/**
+ * Clase que monta un cliente para realizar peticiones REST a un servidor (se supone que tenemos el servidor que hicimos de info de clima levantado)
+ * @author diegoProFP
+ *
+ */
 public class ApacheClientGet {
 
 	//Creamos la URL principal
@@ -25,12 +31,20 @@ public class ApacheClientGet {
 		//Llamamos a las distintas acciones
 		getSaludo();
 		
-		String nombreCiudad = "Gerona";
+		//Metemos los datos de Albacete
+		String ciudadAlbacete = "Albacete";
+		InfoClima datosAlbacete = generarDatosClimaCiudad(ciudadAlbacete);
 		
-		InfoClima nuevaData = generarDatosClimaCiudad(nombreCiudad);
+		incluirCiudad(datosAlbacete);
+		getInfoClima(ciudadAlbacete);
 		
-		incluirCiudad(nuevaData);
-		getInfoClima(nombreCiudad);
+		String ciudadSevilla = "Sevilla";
+		InfoClima datosSevilla = generarDatosClimaCiudad(ciudadSevilla);
+		
+		incluirCiudad(datosSevilla);
+		getInfoClima(ciudadSevilla);
+		
+		getClimaTodas();
 	}
 	
 
@@ -49,6 +63,27 @@ public class ApacheClientGet {
 				.accept(MediaType.APPLICATION_JSON_TYPE)  //El tipo de dato de recepcion de datos
 				.query("ciudad", ciudad)   //Parametros
 				.get(InfoClima.class);     //Accion y el tipo de clase que esperamos a la vuelta
+
+		System.out.println(datosClima);  //Mostramos los datos recibidos
+		System.out.println(clienteWeb.getResponse().getStatus());  //Podemos acceder a los datos del estado de la respuesta
+		
+		System.out.println("---- FIN GET INFO CLIMA ------");
+		System.out.println();
+	}
+	
+	/**
+	 * Solicita los datos de todas las ciudades almacenadas
+	 */
+	private static void getClimaTodas() {
+		System.out.println();
+		System.out.println("---- GET INFO CLIMA TODAS LAS CIUDADES ------");
+		
+		clienteWeb.reset();
+		
+		Collection<? extends InfoClima> datosClima = clienteWeb
+				.path("todas-ciudades")    //La ruta "interna" de la peticion
+				.accept(MediaType.APPLICATION_JSON_TYPE)  //El tipo de dato de recepcion de datos
+				.getCollection(InfoClima.class);
 
 		System.out.println(datosClima);  //Mostramos los datos recibidos
 		System.out.println(clienteWeb.getResponse().getStatus());  //Podemos acceder a los datos del estado de la respuesta
@@ -101,5 +136,7 @@ public class ApacheClientGet {
 		
 		return nuevaData;
 	}
+	
+	
 
 }
